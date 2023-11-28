@@ -1,6 +1,6 @@
 import chess.engine
 
-path = r'C:\Users\pulchihd\Desktop\PythonChess\stockfish-windows-x86-64-modern\stockfish\stockfish-windows-x86-64-modern'
+path = r'C:\PythonChess\stockfish-windows-x86-64-modern\stockfish\stockfish-windows-x86-64-modern'
 
 engine = chess.engine.SimpleEngine.popen_uci(path)
 
