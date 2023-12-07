@@ -1,6 +1,7 @@
 import cv2 as vision
 import numpy
-
+import chess.engine
+ 
 
 def _toggle(bit):
     black = 10, 72, 137
@@ -36,14 +37,14 @@ class Board:
 
     def detailSquares(self):
         alphabet = [
-            ('A', 1 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('B', 2 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('C', 3 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('D', 4 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('E', 5 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('F', 6 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('G', 7 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
-            ('H', 8 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('a', 1 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('b', 2 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('c', 3 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('d', 4 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('e', 5 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('f', 6 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('g', 7 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
+            ('h', 8 * self.board.shape[1] // 8 - self.board.shape[1] // 16),
         ]
         numbers = [
             ('1', 8 * self.board.shape[0] // 8 - self.board.shape[0] // 16),
@@ -69,41 +70,41 @@ class Board:
         king = (255, 0, 0)
         pawn = (255, 0, 255)
 
-        self.squares_dictionary["A1"][1], self.squares_dictionary["A1"][2] = 1, rook
-        self.squares_dictionary["B1"][1], self.squares_dictionary["B1"][2] = 1, knight
-        self.squares_dictionary["C1"][1], self.squares_dictionary["C1"][2] = 1, bishop
-        self.squares_dictionary["D1"][1], self.squares_dictionary["D1"][2] = 1, queen
-        self.squares_dictionary["E1"][1], self.squares_dictionary["E1"][2] = 1, king
-        self.squares_dictionary["G1"][1], self.squares_dictionary["G1"][2] = 1, bishop
-        self.squares_dictionary["F1"][1], self.squares_dictionary["F1"][2] = 1, knight
-        self.squares_dictionary["H1"][1], self.squares_dictionary["H1"][2] = 1, rook
+        self.squares_dictionary["a1"][1], self.squares_dictionary["a1"][2] = 1, rook
+        self.squares_dictionary["b1"][1], self.squares_dictionary["b1"][2] = 1, knight
+        self.squares_dictionary["c1"][1], self.squares_dictionary["c1"][2] = 1, bishop
+        self.squares_dictionary["d1"][1], self.squares_dictionary["d1"][2] = 1, queen
+        self.squares_dictionary["e1"][1], self.squares_dictionary["e1"][2] = 1, king
+        self.squares_dictionary["g1"][1], self.squares_dictionary["g1"][2] = 1, bishop
+        self.squares_dictionary["f1"][1], self.squares_dictionary["f1"][2] = 1, knight
+        self.squares_dictionary["h1"][1], self.squares_dictionary["h1"][2] = 1, rook
 
-        self.squares_dictionary["A2"][1], self.squares_dictionary["A2"][2] = 1, pawn
-        self.squares_dictionary["B2"][1], self.squares_dictionary["B2"][2] = 1, pawn
-        self.squares_dictionary["C2"][1], self.squares_dictionary["C2"][2] = 1, pawn
-        self.squares_dictionary["D2"][1], self.squares_dictionary["D2"][2] = 1, pawn
-        self.squares_dictionary["E2"][1], self.squares_dictionary["E2"][2] = 1, pawn
-        self.squares_dictionary["G2"][1], self.squares_dictionary["G2"][2] = 1, pawn
-        self.squares_dictionary["F2"][1], self.squares_dictionary["F2"][2] = 1, pawn
-        self.squares_dictionary["H2"][1], self.squares_dictionary["H2"][2] = 1, pawn
+        self.squares_dictionary["a2"][1], self.squares_dictionary["a2"][2] = 1, pawn
+        self.squares_dictionary["b2"][1], self.squares_dictionary["b2"][2] = 1, pawn
+        self.squares_dictionary["c2"][1], self.squares_dictionary["c2"][2] = 1, pawn
+        self.squares_dictionary["d2"][1], self.squares_dictionary["d2"][2] = 1, pawn
+        self.squares_dictionary["e2"][1], self.squares_dictionary["e2"][2] = 1, pawn
+        self.squares_dictionary["g2"][1], self.squares_dictionary["g2"][2] = 1, pawn
+        self.squares_dictionary["f2"][1], self.squares_dictionary["f2"][2] = 1, pawn
+        self.squares_dictionary["h2"][1], self.squares_dictionary["h2"][2] = 1, pawn
 
-        self.squares_dictionary["A8"][1], self.squares_dictionary["A8"][2] = 2, rook
-        self.squares_dictionary["B8"][1], self.squares_dictionary["B8"][2] = 2, knight
-        self.squares_dictionary["C8"][1], self.squares_dictionary["C8"][2] = 2, bishop
-        self.squares_dictionary["D8"][1], self.squares_dictionary["D8"][2] = 2, queen
-        self.squares_dictionary["E8"][1], self.squares_dictionary["E8"][2] = 2, king
-        self.squares_dictionary["G8"][1], self.squares_dictionary["G8"][2] = 2, bishop
-        self.squares_dictionary["F8"][1], self.squares_dictionary["F8"][2] = 2, knight
-        self.squares_dictionary["H8"][1], self.squares_dictionary["H8"][2] = 2, rook
+        self.squares_dictionary["a8"][1], self.squares_dictionary["a8"][2] = 2, rook
+        self.squares_dictionary["b8"][1], self.squares_dictionary["b8"][2] = 2, knight
+        self.squares_dictionary["c8"][1], self.squares_dictionary["c8"][2] = 2, bishop
+        self.squares_dictionary["d8"][1], self.squares_dictionary["d8"][2] = 2, queen
+        self.squares_dictionary["e8"][1], self.squares_dictionary["e8"][2] = 2, king
+        self.squares_dictionary["g8"][1], self.squares_dictionary["g8"][2] = 2, bishop
+        self.squares_dictionary["f8"][1], self.squares_dictionary["f8"][2] = 2, knight
+        self.squares_dictionary["h8"][1], self.squares_dictionary["h8"][2] = 2, rook
 
-        self.squares_dictionary["A7"][1], self.squares_dictionary["A7"][2] = 2, pawn
-        self.squares_dictionary["B7"][1], self.squares_dictionary["B7"][2] = 2, pawn
-        self.squares_dictionary["C7"][1], self.squares_dictionary["C7"][2] = 2, pawn
-        self.squares_dictionary["D7"][1], self.squares_dictionary["D7"][2] = 2, pawn
-        self.squares_dictionary["E7"][1], self.squares_dictionary["E7"][2] = 2, pawn
-        self.squares_dictionary["G7"][1], self.squares_dictionary["G7"][2] = 2, pawn
-        self.squares_dictionary["F7"][1], self.squares_dictionary["F7"][2] = 2, pawn
-        self.squares_dictionary["H7"][1], self.squares_dictionary["H7"][2] = 2, pawn
+        self.squares_dictionary["a7"][1], self.squares_dictionary["a7"][2] = 2, pawn
+        self.squares_dictionary["b7"][1], self.squares_dictionary["b7"][2] = 2, pawn
+        self.squares_dictionary["c7"][1], self.squares_dictionary["c7"][2] = 2, pawn
+        self.squares_dictionary["d7"][1], self.squares_dictionary["d7"][2] = 2, pawn
+        self.squares_dictionary["e7"][1], self.squares_dictionary["e7"][2] = 2, pawn
+        self.squares_dictionary["g7"][1], self.squares_dictionary["g7"][2] = 2, pawn
+        self.squares_dictionary["f7"][1], self.squares_dictionary["f7"][2] = 2, pawn
+        self.squares_dictionary["h7"][1], self.squares_dictionary["h7"][2] = 2, pawn
 
     def draw(self):
         self.makeBoard()
@@ -126,10 +127,39 @@ class Board:
         self.squares_dictionary[mvf][1] = 0
         self.squares_dictionary[mvf][2] = (0, 0, 0)
 
+path = r'C:\Users\pulchihd\Desktop\PythonChess\stockfish-windows-x86-64-modern\stockfish\stockfish-windows-x86-64-modern'
+engine = chess.engine.SimpleEngine.popen_uci(path)
+logical_board = chess.Board()
+physical_board = Board((400, 400, 3))
+physical_board.draw()
 
-board = Board((400, 400, 3))
-board.move('E2E4')
+while True:
+    print(logical_board)
+    physical_board.draw()
+    vision.imwrite('Board.png', physical_board.board)
+    # vision.imshow('Board', physical_board.board)
+    # vision.waitKey(0)
+    print("White to play, please enter a move using the UCI protocol format.")
+    try:
+        user_input = input("Move: ")
+        move = chess.Move.from_uci(user_input)
+    except Exception:
+        print("An error occurred:", Exception)
+        continue
+    if move in logical_board.legal_moves:
+        logical_board.push(move)
+        physical_board.move(user_input)
+    else:
+        print("Illegal move, try again")
+        continue
 
-board.draw()
-vision.imshow('Board', board.board)
-vision.waitKey(0)
+    print("Black to play, calculating...") 
+    try:
+        limit = chess.engine.Limit(time=5.0)
+        best_move = engine.play(logical_board, limit=limit)
+    except Exception:
+        print("An error occurred:", Exception)
+        print("ChessBot has resigned")
+        break
+    logical_board.push(chess.Move.from_uci(str(best_move.move)))
+    physical_board.move(str(best_move.move))
