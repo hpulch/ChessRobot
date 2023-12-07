@@ -117,7 +117,10 @@ class Board:
             else:
                 pass
 
-    def move(self, mvf, mvt):
+    def move(self, mv: str):
+        move = list(mv)
+        mvf = str(move[0] + move[1])
+        mvt = str(move[2] + move[3])
         self.squares_dictionary[mvt][1] = self.squares_dictionary[mvf][1]
         self.squares_dictionary[mvt][2] = self.squares_dictionary[mvf][2]
         self.squares_dictionary[mvf][1] = 0
@@ -125,9 +128,7 @@ class Board:
 
 
 board = Board((400, 400, 3))
-board.move('E2', 'E4')
-board.move('D7', 'D5')
-board.move('E4', 'D5')
+board.move('E2E4')
 
 board.draw()
 vision.imshow('Board', board.board)
